@@ -28,15 +28,15 @@ from sklearn.metrics import classification_report, confusion_matrix, accuracy_sc
 import pickle
 # from input import naive_bayes
 
-# postgres = 'postgres'
-# password = ''
+postgres = 'postgres'
+password = 'ThisIsmypassword1!'
 
 #################################################
 # Database Setup
 #################################################
-# engine = create_engine(
-#     f"postgres://{postgres}:{password}@localhost:5432/Project_2")
-# conn = engine.connect()
+engine = create_engine(
+    f"postgres://{postgres}:{password}@localhost:5432/Project_2")
+conn = engine.connect()
 
 #################################################
 # Flask Setup
@@ -66,8 +66,9 @@ def welcome():
 
 def predict():
     # Load the data
-    csv = "./df1.csv"
-    df = pd.read_csv(csv, encoding = 'unicode_escape')
+    df = pd.read_sql("SELECT * FROM final", conn)
+    # csv = "./df1.csv"
+    # df = pd.read_csv(csv, encoding = 'unicode_escape')
     df_sample = df.sample(frac = .1)
     df3 = df_sample[['Job_Type', 'Description_and_Skill']]
     df3 = df3.dropna()
@@ -113,7 +114,7 @@ def indeed():
     # session = Session(engine)
 
     # Query all data
-    results = pd.read_sql("SELECT * FROM indeed", conn)
+    results = pd.read_sql("SELECT * FROM final", conn)
 
     P2 = results.to_dict(orient='records')
     # session.close()
@@ -131,7 +132,7 @@ def Job_Type():
     # session = Session(engine)
 
     # Query all data
-    results1 = pd.read_csv("./Skill_By_Job_Type.csv")
+    results1 = pd.read_sql("SELECT * FROM job_type", conn)
 
     Job_Type = results1.to_dict(orient='records')
 
@@ -153,7 +154,7 @@ def heran():
     # session = Session(engine)
 
     # Query all data
-    results2 = pd.read_csv("./df1.csv")
+    results2 = pd.read_sql("SELECT * FROM final", conn)
 
     heran = results2.to_dict(orient='records')
     # session.close()
